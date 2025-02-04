@@ -8,7 +8,7 @@ const hobbies = [
     emoji: '🎸', 
     name: 'Guitar', 
     color: 'from-purple-500/20 to-blue-500/20',
-    description: "I&apos;ve been learning guitar since I was 11 and I know a few songs. Music has always been a way for me to express myself and unwind after a long day of coding."
+    description: "I've been learning guitar since I was 11 and I know a few songs. Music has always been a way for me to express myself and unwind after a long day of coding."
   },
   { 
     emoji: '🎵', 
@@ -20,14 +20,14 @@ const hobbies = [
     emoji: '🛹', 
     name: 'Skateboarding', 
     color: 'from-cyan-500/20 to-green-500/20',
-    description: "I&apos;ve been skateboarding since I was 12 and can land a few tricks. Check out my Instagram to see my progress and latest tricks!",
+    description: "I've been skateboarding since I was 12 and can land a few tricks. Check out my Instagram to see my progress and latest tricks!",
     link: 'https://instagram.com/0.os4yed__'
   },
   { 
     emoji: '🚲', 
     name: 'Cycling', 
     color: 'from-green-500/20 to-purple-500/20',
-    description: "I&apos;ve been cycling since I was 3, and it&apos;s become a lifelong passion. Whether it&apos;s a quick ride around the neighborhood or a long adventure, cycling helps me stay active and clear my mind."
+    description: "I've been cycling since I was 3, and it's become a lifelong passion. Whether it's a quick ride around the neighborhood or a long adventure, cycling helps me stay active and clear my mind."
   }
 ];
 
@@ -86,10 +86,11 @@ const Hobbies = () => {
                 {hobby.name}
               </h4>
 
-              {/* Description overlay on hover */}
+              {/* Updated description overlay */}
               <motion.div 
-                className="absolute inset-0 bg-black/80 rounded-lg opacity-0 group-hover:opacity-100 
-                          flex items-center justify-center p-4 transition-all duration-300"
+                className="absolute inset-0 bg-gradient-to-br from-black/90 to-black/80 rounded-lg 
+                          opacity-0 group-hover:opacity-100 transition-all duration-300
+                          flex items-center justify-center p-6 backdrop-blur-sm"
                 initial={false}
                 whileHover={{
                   scale: 1.02,
@@ -99,14 +100,17 @@ const Hobbies = () => {
                   }
                 }}
               >
-                <div className="text-sm text-gray-200">
-                  <p>{hobby.description}</p>
+                <div className="flex flex-col items-center gap-4">
+                  <p className="text-sm text-gray-200 leading-relaxed">
+                    {hobby.description}
+                  </p>
                   {hobby.link && (
                     <motion.a
                       href={hobby.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 mt-2"
+                      className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300
+                               transition-colors duration-300"
                       whileHover={{ 
                         x: 5,
                         transition: {

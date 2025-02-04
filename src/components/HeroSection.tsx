@@ -51,29 +51,62 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Fixed scroll indicator at bottom */}
+      {/* Updated scroll indicator */}
       <motion.div
-        className="absolute bottom-12 left-0 right-0 mx-auto w-full text-center"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
         initial={{ opacity: 1 }}
         animate={{ 
           opacity: isScrolled ? 0 : 1,
           y: isScrolled ? 20 : 0
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ 
+          duration: 0.6,
+          ease: "easeOut"
+        }}
       >
-        <div className="inline-flex flex-col items-center text-purple-400/80 space-y-2">
+        <div className="flex flex-col items-center gap-2">
           <motion.div
-            animate={{ y: [0, 8, 0] }}
+            className="text-purple-400/80"
+            animate={{ 
+              y: [0, 8, 0],
+              opacity: [0.5, 1, 0.5]
+            }}
             transition={{ 
-              duration: 1.5,
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              times: [0, 0.5, 1]
+            }}
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="animate-pulse"
+            >
+              <path d="M12 5v14" />
+              <path d="m19 12-7 7-7-7" />
+            </svg>
+          </motion.div>
+          <motion.span 
+            className="text-sm font-light tracking-wider text-purple-400/60"
+            animate={{ 
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{ 
+              duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="text-2xl"
           >
-            ↓
-          </motion.div>
-          <span className="text-sm font-light tracking-wider">Scroll to explore</span>
+            Scroll to explore
+          </motion.span>
         </div>
       </motion.div>
     </SectionWrapper>
