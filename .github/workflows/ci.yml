@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install --verbose
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
