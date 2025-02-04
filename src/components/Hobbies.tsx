@@ -1,6 +1,5 @@
 'use client';
 import { motion } from 'framer-motion';
-import { floatingAnimation, starAnimation } from '@/utils/animations';
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
@@ -22,7 +21,7 @@ const hobbies = [
     name: 'Skateboarding', 
     color: 'from-cyan-500/20 to-green-500/20',
     description: "I've been skateboarding since I was 12 and can land a few tricks. Check out my Instagram to see my progress and latest tricks!",
-    link: 'https://instagram.com/yourusername'
+    link: 'https://instagram.com/0.os4yed__'
   },
   { 
     emoji: '🚲', 
@@ -32,14 +31,9 @@ const hobbies = [
   }
 ];
 
-const SpaceElements = () => {
-  // ... (keep only the stars code we need for hobbies)
-};
-
 const Hobbies = () => {
   return (
     <div className="relative">
-      <SpaceElements />
       <motion.div className="space-y-6 relative">
         <motion.h3 
           className="text-2xl font-bold text-purple-400"
@@ -107,4 +101,4 @@ const Hobbies = () => {
   );
 };
 
-export default Hobbies; 
+export default Hobbies;
