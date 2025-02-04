@@ -1,10 +1,11 @@
 [build]
-  command = "npm run build"
+  command = "CI= npm run build"
   publish = "out"
 
 [build.environment]
   NEXT_PUBLIC_SITE_URL = "https://osayeed.netlify.app"
   NODE_VERSION = "18.19.0"
+  NPM_FLAGS = "--no-audit --no-fund"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
