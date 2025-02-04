@@ -6,7 +6,6 @@ import HeroSection from '@/components/HeroSection';
 import CustomCursor from '@/components/CustomCursor';
 import { LoadingProvider } from '@/components/LoadingProvider';
 import { ErrorBoundary } from 'react-error-boundary';
-import GetInTouch from '@/components/GetInTouch';
 
 // Error Fallback Component
 const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => {
@@ -113,10 +112,6 @@ export default function Home() {
             
             <SectionWithErrorBoundary>
               <ContactSection />
-            </SectionWithErrorBoundary>
-            
-            <SectionWithErrorBoundary>
-              <GetInTouch />
             </SectionWithErrorBoundary>
           </div>
           

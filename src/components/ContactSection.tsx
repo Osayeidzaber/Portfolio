@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import SectionWrapper from './SectionWrapper';
 import Image from 'next/image';
 
@@ -19,30 +20,40 @@ const socialLinks = [
   },
   {
     name: 'Instagram',
-    url: 'https://instagram.com/yourusername',
+    url: 'https://instagram.com/0.os4yed__',
     icon: 'https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white',
     hoverColor: 'hover:text-pink-500'
   }
 ];
 
 const ContactSection = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  useEffect(() => {
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    if (!formRef.current) return;
 
     try {
-      // Add your form submission logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated delay
+      setIsSubmitting(true);
+      setSubmitStatus('idle');
+
+      await emailjs.sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        formRef.current,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+
       setSubmitStatus('success');
+      formRef.current.reset();
     } catch (error) {
+      console.error('Error sending email:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -86,87 +97,98 @@ const ContactSection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <form onSubmit={handleSubmit} className="relative space-y-6 p-6 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10">
-              {/* Input fields */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="group"
-              >
-                <label className="block text-gray-300 mb-2 transition-colors">Name</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10
-                           focus:border-white/20 focus:ring-1 focus:ring-white/20 
-                           text-gray-200 transition-all duration-300"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-              </motion.div>
+            <motion.form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="relative space-y-6 p-6 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg 
+                             text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50
+                             placeholder-gray-500"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg 
+                             text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50
+                             placeholder-gray-500"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="group"
-              >
-                <label className="block text-gray-300 mb-2 transition-colors">Email</label>
-                <input
-                  type="email"
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10
-                           focus:border-white/20 focus:ring-1 focus:ring-white/20 
-                           text-gray-200 transition-all duration-300"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="group"
-              >
-                <label className="block text-gray-300 mb-2 transition-colors">Message</label>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                  Message
+                </label>
                 <textarea
+                  id="message"
+                  name="message"
                   required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10
-                           focus:border-white/20 focus:ring-1 focus:ring-white/20 
-                           text-gray-200 transition-all duration-300"
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg 
+                           text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50
+                           placeholder-gray-500 resize-none"
+                  placeholder="Your message here..."
                 />
-              </motion.div>
+              </div>
 
-              {/* Submit Button */}
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 px-6 rounded-lg bg-white/10 hover:bg-white/20
-                         text-white font-semibold relative overflow-hidden transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <motion.div className="relative flex items-center justify-center">
-                  {isSubmitting ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center space-x-2"
-                    >
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Sending...</span>
-                    </motion.div>
-                  ) : (
-                    <span>Send Message</span>
-                  )}
-                </motion.div>
-              </motion.button>
-            </form>
+              <div className="flex items-center justify-between">
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-3 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg
+                           border border-purple-500/30 text-purple-400 font-medium
+                           transition-colors duration-300 disabled:opacity-50
+                           disabled:cursor-not-allowed"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </motion.button>
+
+                {submitStatus === 'success' && (
+                  <motion.p
+                    className="text-green-400 text-sm"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    Message sent successfully!
+                  </motion.p>
+                )}
+
+                {submitStatus === 'error' && (
+                  <motion.p
+                    className="text-red-400 text-sm"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    Failed to send message. Please try again.
+                  </motion.p>
+                )}
+              </div>
+            </motion.form>
           </motion.div>
 
           {/* Social Links */}
