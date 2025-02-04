@@ -19,9 +19,8 @@ const nextConfig = {
   env: {
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   },
-  experimental: {
-    appDir: true,
-  }
+  trailingSlash: true,
+  basePath: ''
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
