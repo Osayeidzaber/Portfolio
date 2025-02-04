@@ -68,22 +68,40 @@ const TechStack = () => {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block"
+                  className="block transform-gpu"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  whileHover={{ x: 5, scale: 1.02 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    x: 10,
+                    transition: { 
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 10
+                    }
+                  }}
                   transition={{ 
                     duration: 0.3,
                     delay: (categoryIndex * items.length + index) * 0.1 
                   }}
                 >
-                  <Image 
-                    src={item.icon} 
-                    alt={item.name}
-                    width={200}
-                    height={40}
-                    className="w-full h-10 object-contain hover:shadow-lg hover:shadow-purple-500/20"
-                  />
+                  <div className="relative group">
+                    <Image 
+                      src={item.icon} 
+                      alt={item.name}
+                      width={200}
+                      height={40}
+                      className="w-full h-10 object-contain transition-all duration-300
+                               group-hover:shadow-lg group-hover:shadow-purple-500/20
+                               group-hover:brightness-110"
+                    />
+                    <motion.div
+                      className="absolute inset-0 rounded-lg bg-purple-500/5 opacity-0
+                               group-hover:opacity-100 transition-opacity duration-300"
+                      initial={false}
+                      whileHover={{ scale: 1.05 }}
+                    />
+                  </div>
                 </motion.a>
               ))}
             </div>

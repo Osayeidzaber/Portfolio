@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { ProjectDetails } from './ProjectsSection';
+import type { ProjectDetails } from '@/types/project';
 
 interface ProjectModalProps {
   project: ProjectDetails;

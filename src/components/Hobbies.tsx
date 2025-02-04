@@ -50,19 +50,33 @@ const Hobbies = () => {
               key={hobby.name}
               className={`group relative p-6 rounded-lg bg-gradient-to-br ${hobby.color} 
                          backdrop-blur-sm border border-white/10 text-center 
-                         hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300`}
+                         hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-500`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ 
+                y: -8,
+                transition: {
+                  duration: 0.4,
+                  ease: "easeOut"
+                }
+              }}
+              transition={{ 
+                duration: 0.5, 
+                delay: index * 0.1,
+                ease: "easeOut"
+              }}
             >
               <motion.div 
                 className="text-4xl mb-3"
-                animate={{ y: [0, -5, 0] }}
+                animate={{ 
+                  y: [-2, 2, -2],
+                  rotate: [-2, 2, -2]
+                }}
                 transition={{
-                  duration: 2,
+                  duration: 4,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
+                  times: [0, 0.5, 1]
                 }}
               >
                 {hobby.emoji}
@@ -75,8 +89,15 @@ const Hobbies = () => {
               {/* Description overlay on hover */}
               <motion.div 
                 className="absolute inset-0 bg-black/80 rounded-lg opacity-0 group-hover:opacity-100 
-                          flex items-center justify-center p-4 transition-opacity duration-300"
+                          flex items-center justify-center p-4 transition-all duration-300"
                 initial={false}
+                whileHover={{
+                  scale: 1.02,
+                  transition: {
+                    duration: 0.2,
+                    ease: "easeOut"
+                  }
+                }}
               >
                 <div className="text-sm text-gray-200">
                   <p>{hobby.description}</p>
@@ -86,7 +107,13 @@ const Hobbies = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 mt-2"
-                      whileHover={{ x: 2 }}
+                      whileHover={{ 
+                        x: 5,
+                        transition: {
+                          duration: 0.2,
+                          ease: "easeOut"
+                        }
+                      }}
                     >
                       Check it out <span>→</span>
                     </motion.a>

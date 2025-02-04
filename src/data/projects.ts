@@ -1,33 +1,41 @@
-interface Project {
-  title: string;
-  description: string;
-  repoUrl: string;
-  demoUrl?: string;
-  languages: string[];
-  topics: string[];
-}
+import type { ProjectDetails } from '@/types/project';
 
-export const projects: Project[] = [
+export const projects: ProjectDetails[] = [
   {
-    title: 'Portfolio Website',
+    name: 'Portfolio Website',
     description: 'A modern, cosmic-themed portfolio website built with Next.js and Framer Motion.',
-    languages: ['TypeScript', 'JavaScript', 'CSS'],
-    topics: ['Next.js', 'TailwindCSS', 'Framer-Motion'],
-    repoUrl: 'https://github.com/Osayeedjaber/portfolio',
-    demoUrl: 'https://osayeedjaber.netlify.app'
+    technologies: ['TypeScript', 'Next.js', 'TailwindCSS', 'Framer-Motion'],
+    features: ['Responsive Design', 'Animations', 'Dark Mode'],
+    html_url: 'https://github.com/Osayeedjaber/portfolio',
+    homepage: 'https://osayeedjaber.netlify.app',
+    stats: {
+      stars: 0,
+      forks: 0
+    },
+    created_at: new Date().toISOString()
   },
   {
-    title: 'Discord Bot',
+    name: 'Discord Bot',
     description: 'A feature-rich Discord bot with music playback, moderation, and custom commands.',
-    languages: ['TypeScript', 'JavaScript'],
-    topics: ['Discord.js', 'Node.js', 'MongoDB'],
-    repoUrl: 'https://github.com/Osayeedjaber/discord-bot'
+    technologies: ['TypeScript', 'Discord.js', 'Node.js', 'MongoDB'],
+    features: ['Music Playback', 'Moderation', 'Custom Commands'],
+    html_url: 'https://github.com/Osayeedjaber/discord-bot',
+    stats: {
+      stars: 0,
+      forks: 0
+    },
+    created_at: new Date().toISOString()
   },
   {
-    title: 'Music Player',
+    name: 'Music Player',
     description: 'A web-based music player with playlist management and visualizations.',
-    languages: ['TypeScript', 'JavaScript', 'CSS'],
-    topics: ['React', 'Web Audio API', 'GSAP'],
-    repoUrl: 'https://github.com/Osayeedjaber/music-player'
+    technologies: ['TypeScript', 'React', 'Web Audio API', 'GSAP'],
+    features: ['Playlist Management', 'Audio Visualizations', 'Custom Controls'],
+    html_url: 'https://github.com/Osayeedjaber/music-player',
+    stats: {
+      stars: 0,
+      forks: 0
+    },
+    created_at: new Date().toISOString()
   }
 ]; 

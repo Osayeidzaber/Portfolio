@@ -2,17 +2,21 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ScrollSection from './ScrollSection';
+import type { ProjectDetails } from '@/types/project';
 
-interface GitHubRepo {
+interface GitHubApiResponse {
   name: string;
   description: string;
   html_url: string;
   homepage: string | null;
   language: string;
   topics: string[];
+  stargazers_count: number;
+  forks_count: number;
+  created_at: string;
 }
 
-const ProjectCard = ({ project, index }: { project: GitHubRepo; index: number }) => {
+const ProjectCard = ({ project, index }: { project: ProjectDetails; index: number }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,23 +30,26 @@ const ProjectCard = ({ project, index }: { project: GitHubRepo; index: number })
       </h3>
 
       <p className="text-gray-300 mb-4 text-sm sm:text-base flex-grow">
-        {project.description || 'No description available'}
+        {project.description}
       </p>
 
       <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
-        {project.language && (
-          <span className="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 
-                       text-blue-300 border border-blue-500/20 whitespace-nowrap">
-            {project.language}
-          </span>
-        )}
-        {project.topics.map(topic => (
+        {project.technologies.map(tech => (
           <span
-            key={topic}
+            key={tech}
+            className="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 
+                     text-blue-300 border border-blue-500/20 whitespace-nowrap"
+          >
+            {tech}
+          </span>
+        ))}
+        {project.features.map(feature => (
+          <span
+            key={feature}
             className="px-2 py-0.5 text-xs rounded-full bg-purple-500/10 
                      text-purple-300 border border-purple-500/20 whitespace-nowrap"
           >
-            {topic}
+            {feature}
           </span>
         ))}
       </div>
@@ -94,7 +101,7 @@ const LoadingCard = () => (
 );
 
 const ProjectsSection = () => {
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [repos, setRepos] = useState<ProjectDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -103,10 +110,25 @@ const ProjectsSection = () => {
         const response = await fetch('https://api.github.com/users/Osayeedjaber/repos');
         if (!response.ok) throw new Error('Failed to fetch repos');
         
-        const data = await response.json();
+        const data: GitHubApiResponse[] = await response.json();
         const publicRepos = data
-          .filter((repo: GitHubRepo) => !repo.name.includes('.github.io'))
-          .slice(0, 6);
+          .filter(repo => !repo.name.includes('.github.io'))
+          .slice(0, 6)
+          .map(repo => ({
+            name: repo.name,
+            description: repo.description || 'No description available',
+            html_url: repo.html_url,
+            homepage: repo.homepage || undefined,
+            technologies: [repo.language, ...repo.topics].filter(Boolean),
+            features: repo.topics || [], // Using topics as features
+            stats: {
+              stars: repo.stargazers_count,
+              forks: repo.forks_count
+            },
+            created_at: repo.created_at,
+            language: repo.language,
+            topics: repo.topics
+          }));
         
         setRepos(publicRepos);
       } catch (error) {
