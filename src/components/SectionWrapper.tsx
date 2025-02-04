@@ -1,32 +1,27 @@
 'use client';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { fadeInUp } from '@/utils/animations';
+import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
 
 interface SectionWrapperProps {
-  children: React.ReactNode;
+  children: ReactNode;
   id: string;
   className?: string;
 }
 
-const SectionWrapper = ({ children, id, className = "" }: SectionWrapperProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, {
-    margin: "-100px",
-    once: true
-  });
-
+const SectionWrapper = ({ children, id, className = '' }: SectionWrapperProps) => {
   return (
-    <section
-      id={id}
-      ref={ref}
-      className={`min-h-screen py-32 flex items-center justify-center ${className}`}
-    >
+    <section id={id} className={`py-16 sm:py-24 relative ${className}`}>
       <motion.div
-        variants={fadeInUp}
-        initial="initial"
-        animate={isInView ? "animate" : "initial"}
-        className="w-full"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.5,
+          type: "spring",
+          stiffness: 100,
+          damping: 20
+        }}
+        className="relative z-10"
       >
         {children}
       </motion.div>
