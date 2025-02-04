@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { floatingAnimation } from '@/utils/animations';
+import Image from 'next/image';
 
 const techStack = {
   Languages: [
@@ -76,10 +77,12 @@ const TechStack = () => {
                     delay: (categoryIndex * items.length + index) * 0.1 
                   }}
                 >
-                  <img 
+                  <Image 
                     src={item.icon} 
                     alt={item.name}
-                    className="w-full h-10 object-contain hover:shadow-lg hover:shadow-purple-500/20" 
+                    width={200}
+                    height={40}
+                    className="w-full h-10 object-contain hover:shadow-lg hover:shadow-purple-500/20"
                   />
                 </motion.a>
               ))}

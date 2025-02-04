@@ -33,7 +33,7 @@ const MusicPlayer = () => {
         audioRef.current = null;
       }
     };
-  }, [currentTrack]);
+  }, [currentTrack, volume]);
 
   const togglePlay = () => {
     if (audioRef.current) {

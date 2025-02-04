@@ -13,7 +13,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetError
     <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
       <div className="text-center space-y-4">
         <h2 className="text-2xl font-bold text-purple-400">Oops, something went wrong!</h2>
-        <p className="text-gray-400">Don't worry, it's not you - it's me. Let's try refreshing?</p>
+        <p className="text-gray-400">Don&apos;t worry, it&apos;s not your fault&apos;s here. Let&apos;s try refreshing?</p>
         <button
           onClick={resetErrorBoundary}
           className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg 

@@ -28,7 +28,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Hi, I'm Osayeed Jaber
+            Hi, I&apos;m Osayeed Jaber
           </motion.h1>
           
           <motion.p 
@@ -37,7 +37,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            I'm someone who is... creative by ❤️ & I won't break yours
+            I&apos;m someone who is... creative by ❤️ & I won&apos;t break yours
           </motion.p>
 
           <motion.p 
@@ -46,7 +46,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            Hey! I'm a full-stack developer who's just as passionate about writing clean code as I am about anime marathons. Think of me as the character who grinds to level up, always looking for new quests!
+            Hey! I&apos;m a full-stack developer who&apos;s just as passionate about writing clean code as I am about anime marathons. Think of me as the character who grinds to level up, always looking for new quests!
           </motion.p>
         </motion.div>
       </div>

@@ -8,7 +8,7 @@ const hobbies = [
     emoji: '🎸', 
     name: 'Guitar', 
     color: 'from-purple-500/20 to-blue-500/20',
-    description: "I've been learning guitar since I was 11 and I know a few songs. Music has always been a way for me to express myself and unwind after a long day of coding."
+    description: "I&apos;ve been learning guitar since I was 11 and I know a few songs. Music has always been a way for me to express myself and unwind after a long day of coding."
   },
   { 
     emoji: '🎵', 
@@ -20,14 +20,14 @@ const hobbies = [
     emoji: '🛹', 
     name: 'Skateboarding', 
     color: 'from-cyan-500/20 to-green-500/20',
-    description: "I've been skateboarding since I was 12 and can land a few tricks. Check out my Instagram to see my progress and latest tricks!",
+    description: "I&apos;ve been skateboarding since I was 12 and can land a few tricks. Check out my Instagram to see my progress and latest tricks!",
     link: 'https://instagram.com/0.os4yed__'
   },
   { 
     emoji: '🚲', 
     name: 'Cycling', 
     color: 'from-green-500/20 to-purple-500/20',
-    description: "I've been cycling since I was 3, and it's become a lifelong passion. Whether it's a quick ride around the neighborhood or a long adventure, cycling helps me stay active and clear my mind."
+    description: "I&apos;ve been cycling since I was 3, and it&apos;s become a lifelong passion. Whether it&apos;s a quick ride around the neighborhood or a long adventure, cycling helps me stay active and clear my mind."
   }
 ];
 
@@ -41,7 +41,7 @@ const Hobbies = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          When I'm Not Coding
+          When I&apos;m Not Coding
         </motion.h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
