@@ -1,0 +1,36 @@
+npx create-next-app@latest osayeed-portfolio --typescript --tailwind --eslint
+cd osayeed-portfolio
+npm install framer-motion three @react-three/fiber @react-three/drei gsap particles.js
+
+# Install dependencies
+npm install sharp @next/bundle-analyzer
+
+# Install type definitions for node
+npm install --save-dev @types/node
+
+# Remove node_modules and package-lock.json
+rm -rf node_modules package-lock.json
+
+# Clean npm cache
+npm cache clean --force
+
+# Reinstall dependencies
+npm install
+
+# Run the development server
+npm run dev
+
+mkdir -p public/images
+# Add these images to public/images:
+# - discord-bot.jpg
+# - portfolio.jpg
+# - music-player.jpg
+# - og-image.jpg
+
+# Add these files to public/:
+# - favicon.ico
+# - favicon-16x16.png
+# - favicon-32x32.png
+# - apple-touch-icon.png
+# - android-chrome-192x192.png
+# - android-chrome-512x512.png 

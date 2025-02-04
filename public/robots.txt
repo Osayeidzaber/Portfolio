@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://osayeedjaber.com/sitemap.xml 
