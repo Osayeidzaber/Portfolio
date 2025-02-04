@@ -4,6 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
     remotePatterns: [
       {
@@ -12,11 +13,15 @@ const nextConfig = {
         pathname: '/badge/**',
       },
     ],
+    unoptimized: true,
   },
   reactStrictMode: true,
   env: {
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   },
+  experimental: {
+    appDir: true,
+  }
 };
 
 module.exports = nextConfig;

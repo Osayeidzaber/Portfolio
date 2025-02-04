@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "ANALYZE=true next build",
-    "preinstall": "nvm install 1.19 && nvm use 1.19"
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",
