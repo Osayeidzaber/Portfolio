@@ -6,6 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -13,14 +14,13 @@ const nextConfig = {
         pathname: '/badge/**',
       },
     ],
-    unoptimized: true,
   },
   reactStrictMode: true,
   env: {
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   },
   trailingSlash: true,
-  basePath: ''
+  basePath: '',
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
