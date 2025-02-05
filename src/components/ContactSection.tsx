@@ -37,12 +37,16 @@ const ContactSection = () => {
     emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
 
     // Preload contact section images
-    const preloadImages = [
-      // Add your contact section images here
+    const preloadImages: string[] = [
+      // Add your contact section images here if needed
+      // Example:
+      // '/images/contact1.png',
+      // '/images/contact2.png',
     ];
 
+    // Use HTMLImageElement instead of next/image
     preloadImages.forEach(src => {
-      const img = new Image();
+      const img = new window.Image();
       img.src = src;
     });
 
