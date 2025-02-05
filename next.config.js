@@ -16,10 +16,18 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-  env: {
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
-  },
   trailingSlash: true,
+  experimental: {
+    optimizeCss: false,
+  },
+  distDir: '.next',
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(mp3|wav|ogg|mp4|webm|pdf)$/i,
+      type: 'asset/resource',
+    });
+    return config;
+  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

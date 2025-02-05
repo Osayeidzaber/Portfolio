@@ -2,13 +2,15 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Loading from '@/app/loading';
+import { logWebsiteStatus } from '@/lib/statusLogging';
+import { logErrorToDiscord } from '@/lib/errorLogging';
 
 export function LoadingProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const duration = 3000;
+    const duration = 6000;
     const startTime = Date.now();
 
     const updateProgress = () => {
@@ -20,40 +22,29 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
         requestAnimationFrame(updateProgress);
       } else {
         setProgress(100);
-        // Add a small delay before removing loading screen
-        setTimeout(() => setIsLoading(false), 300);
+        setTimeout(() => {
+          setIsLoading(false);
+          // Send online status when loading completes
+          logWebsiteStatus('online').catch(error => 
+            logErrorToDiscord(error as Error, 'Website Status Logging')
+          );
+        }, 300);
       }
     };
 
     const animation = requestAnimationFrame(updateProgress);
 
-    // Preload critical assets
-    const preloadAssets = async () => {
-      try {
-        // Add your critical images/assets here
-        const criticalImages = [
-          '/apple-touch-icon.png',
-          '/favicon-32x32.png',
-          // Add other critical images
-        ];
-
-        await Promise.all(
-          criticalImages.map(src => {
-            return new Promise((resolve, reject) => {
-              const img = new Image();
-              img.src = src;
-              img.onload = resolve;
-              img.onerror = reject;
-            });
-          })
-        );
-      } catch (error) {
-        console.error('Failed to preload assets:', error);
-      }
+    // Add window beforeunload event to log when user leaves
+    const handleBeforeUnload = () => {
+      logWebsiteStatus('offline').catch(console.error);
     };
 
-    preloadAssets();
-    return () => cancelAnimationFrame(animation);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      cancelAnimationFrame(animation);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   return (

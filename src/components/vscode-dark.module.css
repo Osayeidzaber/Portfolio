@@ -1,0 +1,51 @@
+.codeBlock {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace !important;
+}
+
+.codeBlock :global(.token.comment) {
+  color: #6A9955 !important;
+}
+
+.codeBlock :global(.token.keyword) {
+  color: #569CD6 !important;
+}
+
+.codeBlock :global(.token.string) {
+  color: #CE9178 !important;
+}
+
+.codeBlock :global(.token.function) {
+  color: #DCDCAA !important;
+}
+
+.codeBlock :global(.token.property) {
+  color: #9CDCFE !important;
+}
+
+.codeBlock :global(.token.punctuation) {
+  color: #D4D4D4 !important;
+}
+
+.codeBlock :global(.token.operator) {
+  color: #D4D4D4 !important;
+}
+
+.codeBlock :global(.token.number) {
+  color: #B5CEA8 !important;
+}
+
+.codeBlock :global(.token.boolean) {
+  color: #569CD6 !important;
+}
+
+.codeBlock :global(.token.constant) {
+  color: #4FC1FF !important;
+}
+
+.codeBlock :global(.token.class-name) {
+  color: #4EC9B0 !important;
+} 

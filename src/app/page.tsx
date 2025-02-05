@@ -6,6 +6,10 @@ import HeroSection from '@/components/HeroSection';
 import CustomCursor from '@/components/CustomCursor';
 import { LoadingProvider } from '@/components/LoadingProvider';
 import { ErrorBoundary } from 'react-error-boundary';
+import AnimatedBackground from '@/components/AnimatedBackground';
+import StarryBackground from '@/components/StarryBackground';
+import { LoadingAnimation } from '@/components/LoadingAnimation';
+import { FloatingElements } from '@/components/FloatingElements';
 
 // Error Fallback Component
 const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => {
@@ -28,7 +32,11 @@ const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetError
 
 // Dynamically import heavier components
 const AboutSection = dynamic(() => import('@/components/AboutSection'), {
-  loading: () => <div className="h-screen" />,
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center">
+      <LoadingAnimation />
+    </div>
+  ),
   ssr: false
 });
 
@@ -43,8 +51,21 @@ const ContactSection = dynamic(() => import('@/components/ContactSection'), {
 });
 
 const VSCodeUI = dynamic(() => import('@/components/VSCodeUI'), {
-  loading: () => <div className="h-96" />,
-  ssr: false
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] bg-[#1e1e1e]/50 backdrop-blur-sm rounded-lg overflow-hidden">
+      <LoadingAnimation />
+    </div>
+  )
+});
+
+const GitHubStats = dynamic(() => import('@/components/GitHubStats'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[300px] bg-purple-500/5 backdrop-blur-sm rounded-lg overflow-hidden">
+      <LoadingAnimation />
+    </div>
+  )
 });
 
 // Minimal StarField component
@@ -83,13 +104,18 @@ export default function Home() {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <motion.main
           key="main"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ 
+            duration: 0.8,
+            ease: "easeInOut"
+          }}
           className="relative"
         >
+          <StarryBackground />
           <CustomCursor />
+          <FloatingElements />
           <StarField />
           <Navbar />
           

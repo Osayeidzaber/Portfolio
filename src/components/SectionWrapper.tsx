@@ -10,22 +10,26 @@ interface SectionWrapperProps {
 
 const SectionWrapper = ({ children, id, className = '' }: SectionWrapperProps) => {
   return (
-    <section id={id} className={`py-16 sm:py-24 relative ${className}`}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{
-          duration: 0.5,
-          type: "spring",
-          stiffness: 100,
-          damping: 20
-        }}
-        className="relative z-10"
-      >
+    <motion.section
+      id={id}
+      className={`relative py-20 overflow-hidden ${className}`}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+    >
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent opacity-30" />
+      
+      {/* Content */}
+      <div className="relative">
         {children}
-      </motion.div>
-    </section>
+      </div>
+      
+      {/* Decorative elements */}
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse-slow" />
+    </motion.section>
   );
 };
 

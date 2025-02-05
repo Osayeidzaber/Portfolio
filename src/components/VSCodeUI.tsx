@@ -1,161 +1,289 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/components/prism-typescript';
+// Add custom VS Code-like styles
+import styles from './vscode-dark.module.css';
+import { fetchGitHubData } from '../lib/github';
+import type { GithubRepo } from '../lib/github';
+import { logErrorToDiscord } from '@/lib/errorLogging';
 
-const codeContent = [
-  {
-    file: 'AboutMe.tsx',
-    code: `import { Developer } from './types';
-
-const AboutMe: Developer = {
-  name: 'Osayeed Jaber',
-  role: 'Full Stack Developer',
-  location: 'Bangladesh 🇧🇩',
-  interests: [
-    'Web Development',
-    'UI/UX Design',
-    'Open Source',
-    'Space Exploration 🚀'
-  ],
-
-  skills: {
-    frontend: ['React', 'Next.js', 'TypeScript'],
-    backend: ['Node.js', 'Express', 'MongoDB'],
-    other: ['Git', 'Docker', 'AWS']
-  },
-  contact: {
-    email: 'Osayeedjaber18@gmail.com',
-    github: 'Osayeedjaber',
-    instagram: '@0.os4yed__'
-  }
-};
-
-export default AboutMe;`
-  },
-  {
-    file: 'Projects.tsx',
-    code: `import { Project } from './types';
-
-const Projects: Project[] = [
-  {
-    name: 'Portfolio',
-    description: 'My personal portfolio with space theme',
-    tech: ['Next.js', 'TypeScript', 'Tailwind'],
-    github: 'https://github.com/Osayeedjaber'
-  },
-  // More projects...
-];
-
-export default Projects;`
-  }
-];
+const ShootingStar = () => (
+  <motion.div
+    className="absolute w-0.5 h-0.5 bg-white"
+    initial={{ 
+      opacity: 0,
+      x: Math.random() * 500,
+      y: -10,
+    }}
+    animate={{
+      opacity: [0, 1, 0],
+      x: `+=${Math.random() * 200 + 100}`,
+      y: `+=${Math.random() * 200 + 100}`,
+    }}
+    transition={{
+      duration: Math.random() * 2 + 1,
+      repeat: Infinity,
+      repeatDelay: Math.random() * 3,
+    }}
+  />
+);
 
 const VSCodeUI = () => {
-  const [selectedFile, setSelectedFile] = useState(0);
-  const [typedText, setTypedText] = useState('');
-  const [lineNumbers, setLineNumbers] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState('about.ts');
+  const [githubData, setGithubData] = useState<{
+    repos: GithubRepo[];
+    stats: { totalRepos: number; totalStars: number };
+  }>({
+    repos: [],
+    stats: { totalRepos: 0, totalStars: 0 }
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
 
+  // Initialize Prism.js
+  const initializePrism = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      require('prismjs/components/prism-typescript');
+      Prism.highlightAll();
+    }
+  }, []);
+
+  // Load GitHub data
   useEffect(() => {
-    setTypedText('');
-    let currentText = '';
-    const codeLines = codeContent[selectedFile].code.split('\n');
-    setLineNumbers(codeLines.map((_, i) => (i + 1).toString().padStart(2, ' ')));
-
-    const typeText = async () => {
-      for (let i = 0; i < codeContent[selectedFile].code.length; i++) {
-        currentText += codeContent[selectedFile].code[i];
-        setTypedText(currentText);
-        await new Promise(resolve => setTimeout(resolve, 20));
+    const loadData = async () => {
+      try {
+        const data = await fetchGitHubData('OsayeedJaber');
+        if (Array.isArray(data)) {
+          setGithubData({
+            repos: data as GithubRepo[],
+            stats: {
+              totalRepos: data.length,
+              totalStars: data.reduce((acc: number, repo: GithubRepo) => acc + (repo.stargazers_count || 0), 0)
+            }
+          });
+        }
+      } catch (error) {
+        await logErrorToDiscord(error as Error, 'VSCodeUI - GitHub Data Load');
+      } finally {
+        setIsLoading(false);
+        // Initialize Prism after data is loaded
+        setTimeout(() => {
+          initializePrism();
+          setIsReady(true);
+        }, 100);
       }
     };
 
-    typeText();
-  }, [selectedFile]);
+    loadData();
+  }, [initializePrism]);
 
-  return (
+  // Re-highlight when tab changes
+  useEffect(() => {
+    if (!isLoading && isReady) {
+      setTimeout(initializePrism, 0);
+    }
+  }, [activeTab, isLoading, isReady, initializePrism]);
+
+  const aboutCode = `
+// About Me
+const developer = {
+  name: "Osayeed Jaber",
+  role: "Full Stack Developer",
+  location: "Bangladesh",
+
+  skills: {
+    languages: ["TypeScript", "JavaScript", "Python"],
+    frontend: ["React", "Next.js", "TailwindCSS"],
+    backend: ["Node.js", "Express", "MongoDB"]
+  },
+
+  hobbies: ["Guitar", "Music", "Skateboarding", "Cycling"],
+
+  contact: {
+    email: "osayeedjaber@gmail.com",
+    github: "OsayeedJaber",
+    instagram: "@0.os4yed__"
+  },
+
+  currentlyWorking: [
+    "Portfolio Website",
+    "Discord Bot"
+  ]
+};
+
+// Code with passion, debug with patience
+export default developer;
+`;
+
+  const projectsCode = `
+// Featured Projects
+const projects = [
+  {
+    name: "Portfolio Website",
+    tech: ["Next.js", "TypeScript", "Tailwind"],
+    description: "Personal portfolio with animated UI and dark theme"
+  },
+  {
+    name: "Todo List",
+    tech: ["JavaScript", "CSS"],
+    description: "A todolist with Glassmorphism UI"
+  },
+  {
+    name: "Valentine's Day",
+    tech: ["TypeScript", "React"],
+    description: "Interactive Valentine's day special website"
+  }
+];
+
+// GitHub Stats
+const stats = {
+  totalRepos: ${githubData.stats.totalRepos},
+  totalStars: ${githubData.stats.totalStars},
+  mainLanguages: ["TypeScript", "JavaScript", "React"]
+};
+
+export default { projects, stats };
+`;
+
+  const getActiveCode = () => {
+    return activeTab === 'about.ts' ? aboutCode : projectsCode;
+  };
+
+  const Header = () => (
+    <div className="text-center mb-12 relative">
+      <motion.h2
+        className="text-4xl font-bold text-white mb-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        Moon is beautiful, isn&apos;t it?
+      </motion.h2>
+      <motion.p
+        className="text-xl text-purple-400"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        But my designs are also beautiful...
+      </motion.p>
+    </div>
+  );
+
+  const VSCodeFrame = ({ children }: { children: React.ReactNode }) => (
     <motion.div 
-      className="relative w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl my-20"
+      className="max-w-4xl mx-auto rounded-lg overflow-hidden bg-[#1e1e1e] shadow-2xl border border-black/50"
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* VSCode window frame */}
-      <div className="bg-[#1e1e1e] rounded-t-lg">
-        {/* Title bar */}
-        <div className="flex items-center px-4 py-2 bg-[#323233] border-b border-[#424242]">
-          <div className="flex space-x-2 mr-4">
-            <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-            <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-            <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+      {/* Title Bar */}
+      <div className="bg-[#323233] p-2 flex items-center justify-between">
+        <div className="flex space-x-2">
+          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+        </div>
+        <div className="text-gray-400 text-sm font-mono">portfolio.ts</div>
+        <div className="w-12" />
+      </div>
+
+      <div className="flex">
+        {/* File Explorer */}
+        <div className="w-52 bg-[#252526] border-r border-[#1e1e1e]">
+          <div className="p-3 text-gray-400 text-xs uppercase tracking-wide font-semibold">
+            Explorer
           </div>
-          <div className="text-white/60 text-sm">
-            {codeContent[selectedFile].file} - Visual Studio Code
+          <div className="px-3 space-y-2">
+            <div className="text-gray-300 text-sm mb-2">
+              <span className="font-mono opacity-75">Osayeed Jaber</span>
+            </div>
+            <motion.div
+              className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
+                activeTab === 'about.ts' ? 'bg-[#37373d]' : 'hover:bg-[#37373d]'
+              }`}
+              onClick={() => setActiveTab('about.ts')}
+              whileHover={{ x: 2 }}
+            >
+              <span className="text-sm text-gray-300 font-mono opacity-75">
+                {`>>`} about me
+              </span>
+            </motion.div>
+            <motion.div
+              className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
+                activeTab === 'projects.ts' ? 'bg-[#37373d]' : 'hover:bg-[#37373d]'
+              }`}
+              onClick={() => setActiveTab('projects.ts')}
+              whileHover={{ x: 2 }}
+            >
+              <span className="text-sm text-gray-300 font-mono opacity-75">
+                {`>>`} works
+              </span>
+            </motion.div>
+            <div className="text-gray-300 text-sm px-3 py-1 font-mono opacity-75">
+              {`>>`} src
+            </div>
+            <div className="text-gray-300 text-sm px-6 font-mono opacity-75">
+              index.ts
+            </div>
           </div>
         </div>
 
-        <div className="flex">
-          {/* Sidebar */}
-          <div className="w-48 bg-[#252526] p-4 border-r border-[#424242]">
-            <div className="text-sm text-gray-400 mb-2">EXPLORER</div>
-            <div className="space-y-1">
-              {codeContent.map((file, index) => (
-                <motion.button
-                  key={file.file}
-                  className={`w-full text-left px-2 py-1 rounded text-sm ${
-                    selectedFile === index 
-                      ? 'bg-[#37373d] text-white' 
-                      : 'text-gray-400 hover:bg-[#2a2d2e]'
-                  }`}
-                  onClick={() => setSelectedFile(index)}
-                  whileHover={{ x: 2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {file.file}
-                </motion.button>
-              ))}
+        {/* Editor Content */}
+        <div className="flex-1 overflow-auto">
+          <div className="p-4 font-mono text-sm">
+            {children}
+          </div>
+        </div>
+      </div>
+
+      {/* Status Bar */}
+      <div className="bg-[#007acc] text-white text-xs px-3 py-1 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <span className="flex items-center gap-1">
+            <span className="font-mono opacity-75">{`>>`}</span>
+            <span className="opacity-90">main</span>
+          </span>
+          <span className="opacity-90">TypeScript</span>
+        </div>
+        <div className="flex items-center space-x-3 opacity-75">
+          <span>UTF-8</span>
+          <span>LF</span>
+          <span>2 spaces</span>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  return (
+    <div className="relative">
+      <Header />
+      <VSCodeFrame>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-purple-500/20">
+              <div className="absolute top-0 left-0 w-full h-full border-t-2 border-purple-500 rounded-full" />
             </div>
           </div>
-
-          {/* Editor content */}
-          <div className="flex-1 p-4 font-mono text-sm overflow-x-auto">
-            <div className="flex">
-              {/* Line numbers */}
-              <div className="text-gray-600 pr-4 select-none text-right">
-                {lineNumbers.map((num, i) => (
-                  <div key={i}>{num}</div>
-                ))}
-              </div>
-              {/* Code content */}
-              <pre className="text-gray-300">
-                <code>{typedText}</code>
-                <motion.span
-                  className="inline-block w-2 h-4 bg-white/50 ml-1"
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
+        ) : (
+          <div className={`flex ${!isReady ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
+            <div className="text-gray-600 mr-6 select-none text-right w-8">
+              {getActiveCode().split('\n').map((_, i) => (
+                <div key={i}>{i + 1}</div>
+              ))}
+            </div>
+            <div className="flex-1">
+              <pre className={`${styles.codeBlock} language-typescript`}>
+                <code>{getActiveCode()}</code>
               </pre>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Terminal */}
-      <div className="bg-[#1e1e1e] border-t border-[#424242] p-4">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="font-mono text-sm"
-        >
-          <span className="text-[#3fb950]">➜</span>
-          <span className="text-[#9cdcfe]"> ~/portfolio</span>
-          <span className="text-white"> npm run dev</span>
-          <div className="mt-2 text-[#3fb950]">
-            ready - started server on 0.0.0.0:3000
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
+        )}
+      </VSCodeFrame>
+    </div>
   );
 };
 

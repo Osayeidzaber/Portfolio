@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import SectionWrapper from './SectionWrapper';
 import Image from 'next/image';
+import { logErrorToDiscord } from '@/lib/errorLogging';
 
 const socialLinks = [
   {
@@ -30,35 +31,61 @@ const ContactSection = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
+
+    // Preload contact section images
+    const preloadImages = [
+      // Add your contact section images here
+    ];
+
+    preloadImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    setIsReady(true);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
 
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      const error = new Error('Missing EmailJS configuration');
+      await logErrorToDiscord(error, 'ContactSection - EmailJS Config');
+      setSubmitStatus('error');
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setSubmitStatus('idle');
 
       await emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        serviceId,
+        templateId,
         formRef.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        publicKey
       );
 
       setSubmitStatus('success');
       formRef.current.reset();
     } catch (error) {
-      console.error('Error sending email:', error);
+      await logErrorToDiscord(error as Error, 'ContactSection - Form Submit');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (!isReady) return null;
 
   return (
     <SectionWrapper id="contact">
