@@ -1,5 +1,6 @@
 import './globals.css';
 import { Metadata } from 'next';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://osayeed.netlify.app'),
@@ -10,11 +11,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Osayeed Jaber | Full Stack Developer',
     description: 'Full Stack Developer passionate about creating clean, efficient, and user-friendly web applications.',
-    url: 'https://your-domain.com',
+    url: 'osayeedjaber.netlify.app',
     siteName: 'Osayeed Jaber Portfolio',
     images: [
       {
-        url: 'https://your-domain.com/og-image.png',
+        url: 'https://osayeed.netlify.app/og-image.png',
         width: 1200,
         height: 630,
       },
@@ -46,8 +47,10 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
       </head>
       <body className="bg-black min-h-screen text-white antialiased">
-        <div className="fixed inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black -z-10" />
-        {children}
+        <ErrorBoundary>
+          <div className="fixed inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black -z-10" />
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   )
